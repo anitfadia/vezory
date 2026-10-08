@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vezory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060807;
+    --bg-deep: #030403;
+    --ink: #ece9e1;
+    --ink-dim: #8b9089;
+    --pine: #2ab77a;
+    --pine-line: #09e47a;
+    --green: #44ae3b;
+    --red:#EF1014;
+    --green-soft: #2c6b4a;
+    --hair: rgba(79,174,125,0.14);
+    --serif: 'Fraunces', Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    .accent{
+  color: var(--green);
+  text-decoration: none;
+}
+.accent:hover{
+  color: var(--ink);
+}
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--pine-line); color: var(--ink); }
+
+  a{ color: inherit; }
+
+  /* ---------- background texture ---------- */
+  .field{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(23,57,42,0.35), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(23,57,42,0.18), transparent 60%);
+  }
+  .field svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    opacity: 0.5;
+  }
+
+  /* ---------- header / logo ---------- */
+  header{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    display:flex;
+    justify-content:center;
+    padding: 2.4rem 0 0;
+    pointer-events:none;
+  }
+  .wordmark{
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.42em;
+    color: var(--green);
+    text-transform: lowercase;
+    display:flex;
+    align-items:center;
+    gap: 0.5rem;
+  }
+  .wordmark .cursor{
+    width: 8px; height: 1.05rem;
+    background: var(--green);
+    display:inline-block;
+    animation: blink 1.1s steps(2,start) infinite;
+    transform: translateY(1px);
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  /* ---------- hero / quote swap ---------- */
+  .hero-wrap{
+    position: relative;
+    height: 220vh;
+    z-index: 1;
+  }
+  .hero-pin{
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 0 6vw;
+    text-align:center;
+  }
+  .quote-stack{
+    position:relative;
+    max-width: 780px;
+    min-height: 220px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .quote{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 2.5rem);
+    line-height: 1.35;
+    color: var(--ink);
+    transition: opacity 0.15s linear, filter 0.15s linear;
+  }
+  .quote em{
+    font-style: italic;
+    color: var(--green);
+  }
+  .quote-attr{
+    position:absolute;
+    bottom: -1.6rem;
+    right: -4.6rem;
+    transform: translateX(100%);
+    width: max-content;
+    max-width: 220px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    transition: opacity 0.2s linear;
+  }
+
+  @media (max-width: 900px){
+    .quote{
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .quote-attr{
+      position: static;
+      transform: none;
+      display: block;
+      text-align: center;
+      max-width: none;
+      width: 100%;
+    }
+  }
+
+  /* ---------- content sections ---------- */
+  main{
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+  }
+
+  section.block{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 9rem 6vw 7rem;
+    border-top: 1px solid var(--hair);
+  }
+  section.block:first-of-type{ border-top: none; }
+
+  .tag{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    color: var(--green-soft);
+    margin: 0 0 1.6rem;
+  }
+  .tag::before{
+    content: '';
+    display:inline-block;
+    width: 6px; height: 6px;
+    background: var(--green);
+    margin-right: 0.7em;
+    border-radius: 50%;
+    transform: translateY(-1px);
+  }
+
+  h2{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    line-height: 1.15;
+    margin: 0 0 1.6rem;
+    max-width: 14ch;
+  }
+
+  p.lede{
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 62ch;
+    margin: 0 0 1.2rem;
+  }
+  p.body-text{
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--ink-dim);
+    max-width: 60ch;
+    margin: 0 0 1rem;
+  }
+
+  .pillars{
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .pillars .pillar{
+    padding: 1.6rem 1.6rem 1.6rem 0;
+    border-left: 1px solid var(--hair);
+    padding-left: 1.6rem;
+  }
+  .pillars .pillar:first-child{ border-left: none; padding-left: 0; }
+  .pillar .num{
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--green-soft);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.8rem;
+    display:block;
+  }
+  .pillar h3{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.15rem;
+    margin: 0 0 0.6rem;
+    color: var(--ink);
+  }
+  .pillar p{
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    line-height: 1.65;
+    color: var(--ink-dim);
+    margin:0;
+  }
+
+  .future-list{
+    margin-top: 2.6rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .future-row{
+    display:grid;
+    grid-template-columns: 110px 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--hair);
+  }
+  .future-row:last-child{ border-bottom: 1px solid var(--hair); }
+  .future-row .stage{
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    padding-top: 0.15rem;
+  }
+  .future-row h4{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+  .future-row p{
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--ink-dim);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  footer{
+    position:relative;
+    z-index:2;
+    padding: 4rem 6vw 3rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer .fmark{ color: var(--green); }
+
+  .credit{
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+    text-align: center;
+    padding: 0 0 2rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    opacity: 0.6;
+    display: flex;
+    justify-content: center;
+    gap: 1.8rem;
+  }
+
+  /* Custom cursor — desktop only, doesn't affect touch devices */
+@media (hover: hover) and (pointer: fine){
+  body{ cursor: none; }
+  a, button{ cursor: none; }
+
+  .cursor-dot{
+    position: fixed;
+    top: 0; left: 0;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: background 0.15s ease;
+  }
+  .cursor-dot.on-text{
+    background: #e6544c;
+  }
+}
+.world-clocks{
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+.clock-label{
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-align: center;
+}
+
+@media (max-width: 1150px){
+  .world-clocks{ display: none; }
+}
+.world-clocks-right{
+  left: auto;
+  right: 2rem;
+}
+
+</style>
+</head>
+<body>
+<div class="world-clocks">
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="mumbai-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="mumbai-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="mumbai-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">Mumbai</div>
+  </div>
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="nyc-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="nyc-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="nyc-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">New York</div>
+  </div>
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="london-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="london-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="london-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">London</div>
+  </div>
+
+</div>
+<div class="cursor-dot" id="cursorDot"></div>
+<header>
+  <div class="wordmark">vezory<span class="cursor"></span></div>
+</header>
+
+<div class="hero-wrap" id="heroWrap">
+  <div class="hero-pin">
+    <div class="quote-stack">
+      <div class="quote" id="quoteA">
+        “The market is a device for transferring money from the impatient to <em>the patient.</em>”
+        <span class="quote-attr">— Warren Buffett</span>
+      </div>
+      <div class="quote" id="quoteB" style="opacity:0;">
+        “The market is a device for transferring money from the impatient to <em>ones that embrace algorithms.</em>”
+        <span class="quote-attr"><p></p><p></p>— vezory</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="world-clocks world-clocks-right">
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="frankfurt-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="frankfurt-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="frankfurt-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">Frankfurt</div>
+  </div>
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="hongkong-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="hongkong-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="hongkong-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">Hong Kong</div>
+  </div>
+
+  <div class="clock-item">
+    <svg viewBox="0 0 100 100" width="60" height="60">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#1f4a35" stroke-width="2"/>
+      <line x1="50" y1="6" x2="50" y2="12" stroke="#8b9089" stroke-width="2"/>
+      <line x1="94" y1="50" x2="88" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <line x1="50" y1="94" x2="50" y2="88" stroke="#8b9089" stroke-width="2"/>
+      <line x1="6" y1="50" x2="12" y2="50" stroke="#8b9089" stroke-width="2"/>
+      <g id="singapore-hour"><line x1="50" y1="50" x2="50" y2="28" stroke="#ece9e1" stroke-width="3" stroke-linecap="round"/></g>
+      <g id="singapore-minute"><line x1="50" y1="50" x2="50" y2="18" stroke="#ece9e1" stroke-width="2" stroke-linecap="round"/></g>
+      <g id="singapore-second"><line x1="50" y1="50" x2="50" y2="14" stroke="#4fae7d" stroke-width="1" stroke-linecap="round"/></g>
+      <circle cx="50" cy="50" r="3" fill="#4fae7d"/>
+    </svg>
+    <div class="clock-label">Singapore</div>
+  </div>
+
+</div>
+<main>
+
+  <section class="block">
+    <p class="tag">About us</p>
+    <h2>Built by engineers, for what the markets are becoming.</h2>
+    <p class="lede">Vezory is an early-stage quantitative trading firm, founded on the belief that markets reward the prepared, not the loud. We are at the very beginning of our journey — small, deliberate, and building in the open.</p>
+    <p class="body-text">Our work today is foundational: research, discipline, and the long study of market structure that every serious trading firm is built on. We are not pretending to be further along than we are. We are here for the long arc, not the headline.</p>
+  </section>
+
+  <section class="block">
+    <p class="tag">What we do</p>
+    <h2>Three disciplines, one conviction.</h2>
+    <p class="lede">Vezory is organized around the three pillars that will define our firm as we grow — research, infrastructure, and execution.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="num">01</span>
+        <h3>Quantitative research</h3>
+        <p>Studying market microstructure, price behavior, and the statistical signals that separate noise from opportunity.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">02</span>
+        <h3>Algorithmic infrastructure</h3>
+        <p>Building the software that turns a strategy into disciplined, repeatable execution — reliable before it needs to be fast.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">03</span>
+        <h3>Disciplined execution</h3>
+        <p>Treating risk as a first-class concern, not an afterthought, from the very first line of strategy we write.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="tag">The future</p>
+    <h2>Where Vezory is headed.</h2>
+    <p class="lede">We are early. That is the point. Here is the path we are walking toward.</p>
+    <div class="future-list">
+      <div class="future-row">
+        <div class="stage">Now</div>
+        <div>
+          <h4>Foundations</h4>
+          <p>Learning the craft — markets, machine learning, and the systems that connect them — before building anything we'd put capital behind.</p>
+        </div>
+      </div>
+      <div class="future-row">
+        <div class="stage">Next</div>
+        <div>
+          <h4>Research infrastructure</h4>
+          <p>Building the internal tools for backtesting, data collection, and strategy research that everything else will stand on.</p>
+        </div>
+      </div>
+      <div class="future-row">
+        <div class="stage">Later</div>
+        <div>
+          <h4>Machine learning driven strategy</h4>
+          <p>Bringing systematic, ML-informed models into live research once the fundamentals are proven, not before.</p>
+        </div>
+      </div>
+      <div class="future-row">
+        <div class="stage">Ahead</div>
+        <div>
+          <h4>A registered algorithmic trading practice</h4>
+          <p>The long-term goal: a properly registered firm trusted to run algorithmic strategies on behalf of others, built the same way every real edge is — slowly, and on evidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+<section class="block">
+  <p class="tag">Team</p>
+  <h2>The people building Vezory.</h2>
+  <div class="team-list">
+    <div class="team-card">
+      <h3><span style="color: var(--green);">Anit Fadia</span></h3>
+      <div class="role">Founder <span style="color: var(--green);">·</span> AI/ML Engineer</div>
+    </div>
+  </div>
+</section>
+</main>
+<!-- Vezory waitlist section — fully self-contained, safe to paste anywhere -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<section style="
+  background:#060807;
+  text-align:center;
+  padding:6rem 6vw;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-family:'Fraunces', Georgia, serif;
+">
+
+  <p style="
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.24em;
+    color:#2c6b4a;
+    text-transform:uppercase;
+    margin:0 0 1.6rem;
+  ">Stay ahead</p>
+
+  <h2 style="
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:400;
+    font-size:clamp(1.9rem, 4vw, 2.9rem);
+    line-height:1.15;
+    color:#ece9e1;
+    max-width:20ch;
+    margin:0 0 1.6rem;
+  ">Get notified as Vezory builds.</h2>
+
+  <p style="
+    font-family:'Fraunces', Georgia, serif;
+    font-size:1.15rem;
+    line-height:1.7;
+    color:#ece9e1;
+    max-width:48ch;
+    margin:0;
+  ">No spam, no noise — just word when there's something exciting to share.</p>
+
+  <form
+    action="https://buttondown.com/api/emails/embed-subscribe/anit"
+    method="post"
+    target="popupwindow"
+    onsubmit="window.open('https://buttondown.com/anit', 'popupwindow')"
+    style="
+      display:flex;
+      align-items:flex-end;
+      gap:1.4rem;
+      margin:2.6rem auto 0;
+      max-width:420px;
+      width:100%;
+    "
+  >
+    <input
+      type="email" name="email" placeholder="name@domain.com" required
+      style="
+        flex:1;
+        background:transparent;
+        border:none;
+        border-bottom:1px solid #1f4a35;
+        outline:none;
+        padding:0.6rem 0.1rem;
+        font-family:'Fraunces', Georgia, serif;
+        font-style:italic;
+        font-size:1.05rem;
+        color:#ece9e1;
+        text-align:left;
+      "
+      onfocus="this.style.borderBottomColor='#4fae7d'"
+      onblur="this.style.borderBottomColor='#1f4a35'"
+    >
+    <input type="hidden" value="1" name="embed">
+    <button
+      type="submit"
+      style="
+        background:none;
+        border:none;
+        border-bottom:1px solid transparent;
+        padding:0.6rem 0 0.7rem;
+        font-family:'JetBrains Mono', monospace;
+        font-weight:500;
+        font-size:0.78rem;
+        letter-spacing:0.16em;
+        text-transform:uppercase;
+        color:#4fae7d;
+        cursor:pointer;
+        white-space:nowrap;
+      "
+      onmouseover="this.style.color='#ece9e1'; this.style.borderBottomColor='#4fae7d'"
+      onmouseout="this.style.color='#4fae7d'; this.style.borderBottomColor='transparent'"
+    >Join</button>
+  </form>
+
+  <p style="
+    margin:1.4rem auto 0;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    color:#8b9089;
+    opacity:0.75;
+  ">We'll only email you when there's something worth reading.</p>
+
+</section>
+
+<footer>
+  <span><span class="fmark">vezory</span> — one step ahead, always.</span>
+  <span>est. 2026</span>
+</footer>
+<div class="credit">made by Anit Fadia</div>
+<div class="credit">
+  <a class="accent" href="https://github.com/anitfadia">github</a>
+  <a class="accent" href="https://www.linkedin.com/in/anitfadia/">linkedin</a>
+  <a class="accent" href="https://www.instagram.com/vezory.ai/">instagram</a>
+</div>
+
+<script>
+  (function(){
+    var wrap = document.getElementById('heroWrap');
+    var qa = document.getElementById('quoteA');
+    var qb = document.getElementById('quoteB');
+
+    function update(){
+      var rect = wrap.getBoundingClientRect();
+      var total = wrap.offsetHeight - window.innerHeight;
+      var scrolled = -rect.top;
+      var progress = total > 0 ? scrolled / total : 0;
+      progress = Math.max(0, Math.min(1, progress));
+
+      // crossfade centered around the middle of the pin duration
+      var t = Math.max(0, Math.min(1, (progress - 0.28) / 0.24));
+      qa.style.opacity = 1 - t;
+      qb.style.opacity = t;
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>
+<script>
+  (function(){
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var dot = document.getElementById('cursorDot');
+    var textSelector = 'p, h1, h2, h3, h4, h5, span, a, button, li, .quote, .tag, .lede, .body-text, .credit, .wordmark, input';
+
+    window.addEventListener('mousemove', function(e){
+      dot.style.left = e.clientX + 'px';
+      dot.style.top = e.clientY + 'px';
+
+      var el = document.elementFromPoint(e.clientX, e.clientY);
+      if (el && el.closest(textSelector)){
+        dot.classList.add('on-text');
+      } else {
+        dot.classList.remove('on-text');
+      }
+    });
+  })();
+</script>
+<script>
+  (function(){
+    var zones = {
+      mumbai: 'Asia/Kolkata',
+      nyc: 'America/New_York',
+      london: 'Europe/London',
+      frankfurt: 'Europe/Berlin',
+      hongkong: 'Asia/Hong_Kong',
+      singapore: 'Asia/Singapore'
+    };
+
+    function getParts(timeZone){
+      var fmt = new Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone, hour12: false,
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      var h=0, m=0, s=0;
+      fmt.formatToParts(new Date()).forEach(function(p){
+        if (p.type === 'hour') h = parseInt(p.value, 10);
+        if (p.type === 'minute') m = parseInt(p.value, 10);
+        if (p.type === 'second') s = parseInt(p.value, 10);
+      });
+      if (h === 24) h = 0;
+      return { h: h, m: m, s: s };
+    }
+
+    function updateClocks(){
+      Object.keys(zones).forEach(function(city){
+        try {
+          var t = getParts(zones[city]);
+          var hourDeg = (t.h % 12) * 30 + t.m * 0.5;
+          var minDeg  = t.m * 6 + t.s * 0.1;
+          var secDeg  = t.s * 6;
+
+          var hourEl = document.getElementById(city + '-hour');
+          var minEl  = document.getElementById(city + '-minute');
+          var secEl  = document.getElementById(city + '-second');
+
+          if (hourEl) hourEl.setAttribute('transform', 'rotate(' + hourDeg + ' 50 50)');
+          if (minEl)  minEl.setAttribute('transform', 'rotate(' + minDeg + ' 50 50)');
+          if (secEl)  secEl.setAttribute('transform', 'rotate(' + secDeg + ' 50 50)');
+        } catch (err) {
+          console.warn('Clock update failed for', city, err);
+        }
+      });
+    }
+
+    updateClocks();
+    setInterval(updateClocks, 1000);
+  })();
+</script>
+<script>
+  (function(){
+    var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+    function scrambleChar(){
+      return CHARS[Math.floor(Math.random() * CHARS.length)];
+    }
+
+    function setupLabel(el){
+      var original = el.textContent.trim();
+      var revealed = original.length;   // starts fully readable
+      var phase = 'hold';               // hold -> encrypt -> holdScrambled -> decrypt -> hold ...
+      var frame = Math.floor(Math.random() * 40); // stagger so labels desync
+
+      function render(){
+        var out = '';
+        for (var i = 0; i < original.length; i++){
+          if (original[i] === ' '){
+            out += ' ';
+          } else if (i < revealed){
+            out += original[i];
+          } else {
+            out += scrambleChar();
+          }
+        }
+        el.textContent = out;
+      }
+
+      function tick(){
+        frame++;
+
+        if (phase === 'hold'){
+          el.textContent = original;
+          if (frame > 100) { phase = 'encrypt'; frame = 0; }
+
+        } else if (phase === 'encrypt'){
+          render();
+          if (frame % 2 === 0 && revealed > 0) revealed--;
+          if (revealed <= 0) { phase = 'holdScrambled'; frame = 0; }
+
+        } else if (phase === 'holdScrambled'){
+          render();
+          if (frame > 18) { phase = 'decrypt'; frame = 0; }
+
+        } else if (phase === 'decrypt'){
+          render();
+          if (frame % 2 === 0 && revealed < original.length) revealed++;
+          if (revealed >= original.length) { phase = 'hold'; frame = 0; }
+        }
+      }
+
+      setInterval(tick, 45);
+    }
+
+    document.querySelectorAll('.clock-label').forEach(setupLabel);
+  })();
+</script>
+</body>
+</html>
